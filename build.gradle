@@ -1,0 +1,22 @@
+plugins {
+    id 'cpp'
+}
+
+model {
+    binaries {
+        all {
+            if (toolChain in Gcc || toolChain in Clang) {
+                if (toolChain in Gcc)
+                    cppCompiler.define "TOOLCHAIN_GCC"
+                else
+                    cppCompiler.define "TOOLCHAIN_CLANG"
+
+                cppCompiler.args "-W", "-Wall",
+                                 "-std=c++17",
+                                 "-I \"include\""
+                                 "-fvisibility=hidden"
+        }
+    }
+}
+  
+  
