@@ -15,11 +15,18 @@ namespace pathetic::math {
     return (std::abs(first - second) < std::numeric_limits<T>::epsilon());
   }
 
-  inline double norm_angle_rad(double angle) {
+  inline double norm_angle(double angle) {
     auto new_angle = std::fmod(angle, ANGLE_TAU);
-    new_angle = std::fmod((new_angle + ANGLE_TAU), ANGLE_TAU);
-    if (new_angle > M_PI)
-      new_angle -= ANGLE_TAU;
-    return new_angle;   
+    new_angle = std::fmod(angle + ANGLE_TAU, ANGLE_TAU);
+
+    return new_angle;
+  }
+
+  inline double norm_angle_delta(double angle_delta) {
+    auto new_angle_delta = norm_angle(angle_delta);
+
+    if (new_angle_delta > M_PI)
+      new_angle_delta -= ANGLE_TAU;
+    return new_angle_delta;
   }
 }
