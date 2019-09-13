@@ -2,8 +2,8 @@
 #include <Eigen/Core>
 
 namespace pathetic::path {
-  Eigen::Matrix<double, 6,6> constexpr get_coeff_matrix() {
-    std::array<std::array<double>, 6> coeffs = {
+  Eigen::Matrix<double, 6,6> get_coeff_matrix() {
+    std::array<std::array<double, 6>, 6> coeffs = {
       {0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
       {0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
       {0.0, 0.0, 0.0, 2.0, 0.0, 0.0},
@@ -32,7 +32,7 @@ namespace pathetic::path {
       double start, double start_deriv, double start_second_deriv,
       double end, double end_deriv, double end_second_deriv
     ) {
-      Eigen::Matrix<double, 6, 1> const target;
+      Eigen::Matrix<double, 6, 1> target;
       target(0,0) = start;
       target(1,0) = start_deriv;
       target(2,0) = start_second_deriv;
@@ -49,15 +49,15 @@ namespace pathetic::path {
       f = result(5,0);
     }
 
-    auto operator[](double t) -> double {
+    auto operator[](double t) const-> double {
       return (a * t + b) * (t * t * t * t) + c * (t * t * t) + d * (t * t) + e * t + f;
     }
 
-    auto deriv(double t) {
+    auto deriv(double t) const{
       return (5 * a * t + 4 * b) * (t * t * t) + (3 * c * t + 2 * d) * t + e;
     }
 
-    auto second_deriv(double t) {
+    auto second_deriv(double t) const{
       return (20 * a * t + 12 * b) * (t * t) + 6 * c * t + 2 * d;
     }
 
