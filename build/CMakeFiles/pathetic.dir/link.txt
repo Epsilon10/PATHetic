@@ -1,1 +1,0 @@
-/usr/bin/clang++ -fPIC -Wall -Wextra  -shared -Wl,-soname,libpathetic.so -o libpathetic.so CMakeFiles/pathetic.dir/src/control/pidf_controller.cc.o CMakeFiles/pathetic.dir/src/math/vector2d.cc.o CMakeFiles/pathetic.dir/src/math/pose2d.cc.o CMakeFiles/pathetic.dir/src/path/quintic_spline.cc.o 

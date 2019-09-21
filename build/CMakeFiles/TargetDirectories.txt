@@ -1,3 +1,0 @@
-/home/epsilon/Documents/robotics/pathetic/build/CMakeFiles/rebuild_cache.dir
-/home/epsilon/Documents/robotics/pathetic/build/CMakeFiles/pathetic.dir
-/home/epsilon/Documents/robotics/pathetic/build/CMakeFiles/edit_cache.dir
