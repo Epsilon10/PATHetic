@@ -61,6 +61,5 @@ namespace pathetic::path {
     return math::vector2d{x[t], y[t]};
   }
 
-  auto quintic_sline
 
 }
