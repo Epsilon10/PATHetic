@@ -12,12 +12,16 @@ namespace pathetic::path {
       waypoint const& start, waypoint const& end, double max_segment_length = 0.25,
       double max_delta_k = 0.01
   ) : x(start.x, start.dx, start.d2x, end.x, end.dx, end.d2x)
-    , y(start.y, start.dy, start.d2y, end.y, end.dy, end.d2y) { }
+    , y(start.y, start.dy, start.d2y, end.y, end.dy, end.d2y), max_segment_length(max_segment_length), 
+      max_delta_k(max_delta_k) {
+        s_samples.reserve(1000);
+        t_samples.reserve(1000);
+    }
 
   auto quintic_spline::approx_length(
-    math::vector2d& v1, math::vector2d const& v2, math::vector2d const& v3    
+    math::vector2d const& v1, math::vector2d const& v2, math::vector2d const& v3    
   ) const -> double {
-    if (math::floating_point_eq(v1.x, v2.x)) v1.x = 0.001;
+    if (math::floating_point_eq(v1.x, v2.x)) const_cast<math::vector2d&>(v1).x = 0.001;
     
     auto const k_1 = 0.5 * 
       (v1.x * v1.x + v1.y * v1.y - v2.x * v2.x - v2.y * v2.y) / (v1.x - v2.x);
@@ -39,9 +43,9 @@ namespace pathetic::path {
   }
 
   auto quintic_spline::curvature(double t) const -> double {
-    auto deriv = pnml_deriv(t);
-    auto second_deriv = pnml_second_deriv(t);
-    auto deriv_norm = deriv.norm();
+    auto const deriv = pnml_deriv(t);
+    auto const second_deriv = pnml_second_deriv(t);
+    auto const deriv_norm = deriv.norm();
 
     return std::abs(deriv.x * second_deriv.y - deriv.y * second_deriv.x)
       / std::pow(deriv_norm, 3);
@@ -51,8 +55,47 @@ namespace pathetic::path {
     double t_lo, double t_hi, math::vector2d const& v_lo,
     math::vector2d const& v_hi
   ) -> void {
-    auto t_mid = 0.5 * (t_lo + t_hi);
-    auto v_mid = (t_mid);
+    auto const v_lo = pnml_get(t_lo);
+    auto const v_hi = pnml_get(t_hi);
+    auto const t_mid = 0.5 * (t_lo + t_hi);
+    auto const v_mid = pnml_get(t_mid);
+
+    auto const delta_k = std::abs(curvature(t_lo) - curvature(t_hi));
+    auto const segment_length = approx_length(v_lo, v_mid, v_hi); 
+
+    if (delta_k > max_delta_k || segment_length > max_segment_length) {
+      parametrize(t_lo, t_mid, v_lo, v_mid);
+      parametrize(t_mid, t_hi, v_mid, v_hi);
+    } else {
+      length += segment_length;
+      s_samples.push_back(length);
+      t_samples.push_back(t_hi);
+    }
+  }
+
+  auto quintic_spline::interp(double s, double s_lo, double s_hi, double t_lo, double t_hi) -> double {
+    return t_lo + (s - s_lo) * (t_hi - t_lo) / (s_hi - s_lo);
+  }
+
+  auto quintic_spline::reparam(double s) -> double {
+    if (s <= 0.0) return 0.0;
+
+    if (s >= length) return 1.0;
+
+    auto lo = 0;
+    auto hi = s_samples.size();
+
+    while (lo <= hi) {
+      auto mid = (lo + hi) / 2;
+
+      if (s < s_samples[mid]) {
+        hi = mid - 1;
+      } else {
+        lo = mid + 1;
+      }
+    }
+
+    return interp(s, s_samples[lo], s_samples[hi], t_samples[lo], t_samples[hi]);
   }
 
   auto quintic_spline::pnml_get(double t) const -> math::vector2d {

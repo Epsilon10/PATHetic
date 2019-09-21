@@ -1,7 +1,7 @@
 #pragma once
 #include "path/parametric_curve.hh"
 #include "path/quintic_polynomial.hh"
-#include <array>
+#include <vector>
 
 namespace pathetic::path {
   struct waypoint {
@@ -18,6 +18,7 @@ namespace pathetic::path {
 
   };
   class quintic_spline : public parametric_curve {
+    public:
     quintic_spline(
       waypoint const& start, waypoint const& end, double max_segment_length = 0.25,
       double max_delta_k = 0.01
@@ -25,13 +26,13 @@ namespace pathetic::path {
 
     auto pnml_get(double t) const -> math::vector2d;
     private:
-    std::array<double, 1000> s_samples;
-    std::array<double, 1000> t_samples;
+    std::vector<double> s_samples;
+    std::vector<double> t_samples;
 
     quintic_polynomial x,y;
 
     auto approx_length(
-      math::vector2d& v1, math::vector2d const&, math::vector2d const& v3 
+      math::vector2d const& v1, math::vector2d const&, math::vector2d const& v3 
     ) const -> double;
 
     auto curvature(double t) const -> double;
@@ -40,6 +41,12 @@ namespace pathetic::path {
       math::vector2d const& v_hi
     ) -> void;
 
+    auto reparam(double s) -> double;
 
+    auto interp(double s, double s_lo, double s_hi, double t_lo, double t_hi) -> double;
+
+    private:
+    double max_delta_k, max_segment_length;
+    double length = 0.0;
   };
 }
