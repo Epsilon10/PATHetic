@@ -21,14 +21,14 @@ namespace pathetic::path {
     quintic_spline(
       waypoint const& start, waypoint const& end, double max_segment_length = 0.25,
       double max_delta_k = 0.01
-      );
+    );
 
     auto pnml_get(double t) const -> math::vector2d;
     private:
     std::array<double, 1000> s_samples;
     std::array<double, 1000> t_samples;
 
-    quintic_polynomial x{start.x, end.x, }
+    quintic_polynomial x,y;
 
     auto approx_length(
       math::vector2d& v1, math::vector2d const&, math::vector2d const& v3 

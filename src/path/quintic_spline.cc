@@ -47,8 +47,6 @@ namespace pathetic::path {
       / std::pow(deriv_norm, 3);
     }
   
-
-
   auto quintic_spline::parametrize(
     double t_lo, double t_hi, math::vector2d const& v_lo,
     math::vector2d const& v_hi
