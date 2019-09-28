@@ -12,12 +12,16 @@ project(pathetic)
 
 add_library(pathetic SHARED
 	src/control/pidf_controller.cc
+	src/kinematics/kinematics.cc
+	src/kinematics/tank_kinematics.cc
 	src/math/vector2d.cc
 	src/math/pose2d.cc
 	src/path/quintic_spline.cc
+	src/path/parametric_curve.cc
+	src/path/quintic_polynomial.cc
 )
 
 target_include_directories(pathetic
-    PRIVATE 
+    PUBLIC 
         ${PROJECT_SOURCE_DIR}/include
 )

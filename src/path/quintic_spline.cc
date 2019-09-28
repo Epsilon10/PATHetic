@@ -9,10 +9,10 @@ namespace pathetic::path {
   ) : x(x), y(y), dx(dx), dy(dy), d2x(d2x), d2y(d2y) { }
 
   quintic_spline::quintic_spline(
-      waypoint const& start, waypoint const& end, double max_segment_length = 0.25,
-      double max_delta_k = 0.01
-  ) : x(start.x, start.dx, start.d2x, end.x, end.dx, end.d2x)
-    , y(start.y, start.dy, start.d2y, end.y, end.dy, end.d2y), max_segment_length(max_segment_length), 
+      waypoint const& start, waypoint const& end, double max_segment_length,
+      double max_delta_k
+  ) : x_pnml(start.x, start.dx, start.d2x, end.x, end.dx, end.d2x)
+    , y_pnml(start.y, start.dy, start.d2y, end.y, end.dy, end.d2y), max_segment_length(max_segment_length), 
       max_delta_k(max_delta_k) {
         s_samples.reserve(1000);
         t_samples.reserve(1000);
@@ -21,11 +21,12 @@ namespace pathetic::path {
   auto quintic_spline::approx_length(
     math::vector2d const& v1, math::vector2d const& v2, math::vector2d const& v3    
   ) const -> double {
-    if (math::floating_point_eq(v1.x, v2.x)) const_cast<math::vector2d&>(v1).x = 0.001;
+    auto v1_x = v1.x;
+    if (math::floating_point_eq(v1_x, v2.x)) v1_x = 0.001;
     
     auto const k_1 = 0.5 * 
-      (v1.x * v1.x + v1.y * v1.y - v2.x * v2.x - v2.y * v2.y) / (v1.x - v2.x);
-    auto const k_2 = (v1.y - v2.y)/(v1.x - v2.x);
+      (v1_x * v1_x + v1.y * v1.y - v2.x * v2.x - v2.y * v2.y) / (v1_x - v2.x);
+    auto const k_2 = (v1.y - v2.y)/(v1_x - v2.x);
 
     auto const b_numerator = 0.5 * (
       v2.x * v2.x - 2 * v2.x * k_1 + v2.y * v2.y - v3.x * v3.x + 2 * 
@@ -36,7 +37,7 @@ namespace pathetic::path {
     auto const b = b_numerator / b_denom;
 
     auto const a = k_1 - k_2 * b;
-    auto const radius = std::sqrt((v1.x - a) * (v1.x - a) + (v1.y - b) * (v1.y - b));
+    auto const radius = std::sqrt((v1_x - a) * (v1_x - a) + (v1.y - b) * (v1.y - b));
 
     auto const angle = 2 * std::asin((v1.dist_to(v3) / 2.0) / radius);
     return angle * radius; 
@@ -55,8 +56,6 @@ namespace pathetic::path {
     double t_lo, double t_hi, math::vector2d const& v_lo,
     math::vector2d const& v_hi
   ) -> void {
-    auto const v_lo = pnml_get(t_lo);
-    auto const v_hi = pnml_get(t_hi);
     auto const t_mid = 0.5 * (t_lo + t_hi);
     auto const v_mid = pnml_get(t_mid);
 
@@ -73,16 +72,16 @@ namespace pathetic::path {
     }
   }
 
-  auto quintic_spline::interp(double s, double s_lo, double s_hi, double t_lo, double t_hi) -> double {
+  auto quintic_spline::interp(double s, double s_lo, double s_hi, double t_lo, double t_hi) const -> double {
     return t_lo + (s - s_lo) * (t_hi - t_lo) / (s_hi - s_lo);
   }
 
-  auto quintic_spline::reparam(double s) -> double {
+  auto quintic_spline::reparam(double s) const -> double {
     if (s <= 0.0) return 0.0;
 
     if (s >= length) return 1.0;
 
-    auto lo = 0;
+    std::size_t lo = 0;
     auto hi = s_samples.size();
 
     while (lo <= hi) {
@@ -99,8 +98,7 @@ namespace pathetic::path {
   }
 
   auto quintic_spline::pnml_get(double t) const -> math::vector2d {
-    return math::vector2d{x[t], y[t]};
+    return math::vector2d{x_pnml[t], y_pnml[t]};
   }
-
 
 }

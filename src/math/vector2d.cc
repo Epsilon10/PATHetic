@@ -1,22 +1,24 @@
+
 #include "math/vector2d.hh"
 
+
 namespace pathetic::math {
-  vector2d::vector2d(double x=0.0, double y=0.0)
+  vector2d::vector2d(double x, double y)
     : x(x), y(y) { }
 
-  auto vector2d::operator+(vector2d const& other) const {
+  auto vector2d::operator+(vector2d const& other) const -> vector2d {
     return vector2d(other.x + x, other.y + y);
   }
 
-  auto vector2d::operator-(vector2d const& other) const {
+  auto vector2d::operator-(vector2d const& other) const -> vector2d {
     return vector2d(x - other.x, y - other.y);
   }
 
-  auto vector2d::operator*(double scalar) const {
+  auto vector2d::operator*(double scalar) const -> vector2d {
     return vector2d(x * scalar, y * scalar);
   }
 
-  auto vector2d::operator/(double scalar) const {
+  auto vector2d::operator/(double scalar) const -> vector2d {
     return vector2d(x / scalar, y / scalar);
   }
 

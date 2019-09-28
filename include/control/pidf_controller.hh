@@ -10,15 +10,15 @@ class pidf_controller {
   public:
     explicit pidf_controller(
         double p, double i, double d, double kV, double kA, double kStatic, 
-        std::function<double(double)> const&);
+        std::function<double(double)>& kF);
     
     auto set_input_bounds(double min, double max) -> void;
     auto set_output_bounds(double min, double max) -> void;
     auto get_error(double position) -> double;
     auto update(double position, double velocity = 0.0, double acceleration = 0.0) -> double;
-
+    auto reset();
   private:
-    double p, i, d;
+    double kP, kI, kD;
     double kV, kA, kStatic;
     std::function<double(double)>& kF;
     

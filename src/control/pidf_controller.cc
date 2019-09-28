@@ -1,13 +1,13 @@
-#include "../include/pidf_controller.hh"
-#include "../include/math/general.hh"
+#include "control/pidf_controller.hh"
+#include "math/general.hh"
 #include <chrono>
 
 namespace pathetic::control {
 
   pidf_controller::pidf_controller(
-    double p, double i, double d, double kV, double kA, double kStatic, 
-    std::function<double(double)> const&) 
-      : p(p), i(i), d(d), kV(kV), kA(kA), kF(kF) { }
+    double kP, double kI, double kD, double kV, double kA, double kStatic, 
+    std::function<double(double)>& kF) 
+      : kP(kP), kI(kI), kD(kD), kV(kV), kA(kA), kF(kF) { }
  
 
   auto pidf_controller::set_input_bounds(double min, double max) -> void {
@@ -34,9 +34,11 @@ namespace pathetic::control {
       while (std::abs(error) > input_range / 2.0) 
         error -= math::sign(error) * input_range;
     }
+
+    return error;
   }
 
-  auto pidf_controller::update(double position, double velocity = 0.0, double acceleration = 0.0) -> double {
+  auto pidf_controller::update(double position, double velocity, double acceleration) -> double {
     auto const now = std::chrono::high_resolution_clock::now();
     auto const error = get_error(position);
     
@@ -63,7 +65,7 @@ namespace pathetic::control {
     }
   }
 
-  auto pidf_controller:reset() {
+  auto pidf_controller::reset() {
     error_sum = 0.0;
     last_error = 0.0;
     has_one_update = false;

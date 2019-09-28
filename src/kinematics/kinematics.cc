@@ -11,8 +11,9 @@ namespace pathetic::kinematics {
     return math::pose2d(field_acc.vec().rotated(-field_pos.heading), field_vel.heading) + 
       math::pose2d(
         -field_vel.x * std::sin(field_pos.heading) + field_vel.y * std::cos(field_pos.heading),
-        -field_vel.x * std::cos(field_pos.heading) - field_vel.y * std::sin(field_pos.heading)
-      );
+        -field_vel.x * std::cos(field_pos.heading) - field_vel.y * std::sin(field_pos.heading),
+        0.0
+      ) * field_vel.heading;
   }
 
   auto calculate_motor_feedforward(

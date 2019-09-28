@@ -22,12 +22,12 @@ namespace pathetic::path {
     auto parametric_curve::second_deriv(double s) -> math::vector2d {
       auto t = reparam(s);
       return pnml_second_deriv(t) * param_deriv(t) * param_deriv(t)
-        * pnml_deriv(t) * param_second_deriv(t);
+        + pnml_deriv(t) * param_second_deriv(t);
     }
 
     auto parametric_curve::second_deriv(double s, double t) -> math::vector2d {
       return pnml_second_deriv(t) * param_deriv(t) * param_deriv(t)
-        * pnml_deriv(t) * param_second_deriv(t);
+        + pnml_deriv(t) * param_second_deriv(t);
     }
 
     auto parametric_curve::start() {
