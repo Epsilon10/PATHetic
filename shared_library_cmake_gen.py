@@ -4,7 +4,7 @@ import glob, os
 library_name = "pathetic"
 standard = "17"
 source_dir = ["src"]
-subdirs = ["control", "kinematics", "math", "path"]
+subdirs = ["control", "kinematics", "math", "path", "profile"]
 sources = []
 
 cwd = os.getcwd()

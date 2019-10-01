@@ -19,9 +19,11 @@ add_library(pathetic SHARED
 	src/path/quintic_spline.cc
 	src/path/parametric_curve.cc
 	src/path/quintic_polynomial.cc
+	src/profile/motion_state.cc
+	src/profile/motion_segment.cc
 )
 
 target_include_directories(pathetic
-    PUBLIC 
+    PRIVATE 
         ${PROJECT_SOURCE_DIR}/include
 )
