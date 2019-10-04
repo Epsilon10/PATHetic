@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <numeric>
 #include "profile/motion_profile.hh"
 
 namespace pathetic::profile {
@@ -16,4 +17,12 @@ namespace pathetic::profile {
     }
     return (*segments.end()).end();
   }
+
+  auto motion_profile::duration() const -> double {
+    return std::accumulate(segments.begin(), segments.end(), 0.0,
+      [](auto const& a, auto const& b) { return a.dt + b.dt; });
+  }
+
+  auto motion_profile::start() const -> motion_state { return (*this)[0.0]; }
+  auto motion_profile::end() const -> motion_state { return (*this)[duration()]; }
 }

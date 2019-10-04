@@ -1,13 +1,14 @@
 #include "control/pidf_controller.hh"
 #include "math/general.hh"
 #include <chrono>
+#include <algorithm>
 
 namespace pathetic::control {
 
   pidf_controller::pidf_controller(
-    double kP, double kI, double kD, double kV, double kA, double kStatic, 
+    pid_coeffecients pid, double kV, double kA, double kStatic, 
     std::function<double(double)>& kF) 
-      : kP(kP), kI(kI), kD(kD), kV(kV), kA(kA), kF(kF) { }
+      : kP(pid.kP), kI(pid.kI), kD(pid.kD), kV(kV), kA(kA), kF(kF) { }
  
 
   auto pidf_controller::set_input_bounds(double min, double max) -> void {

@@ -4,12 +4,13 @@
 #include <functional>
 #include <chrono>
 
+#include "control/pid_coeffecients.hh"
 namespace pathetic::control {
 
 class pidf_controller {
   public:
     explicit pidf_controller(
-        double p, double i, double d, double kV, double kA, double kStatic, 
+        pid_coeffecients pid, double kV, double kA, double kStatic, 
         std::function<double(double)>& kF);
     
     auto set_input_bounds(double min, double max) -> void;

@@ -10,9 +10,9 @@ namespace pathetic::profile {
     motion_profile(std::vector<motion_segment>& segments);
     auto operator[](double t) const -> motion_state;
     auto duration() const -> double;
-    auto reversed() -> motion_profile;
-    auto start() -> motion_state;
-    auto end() -> motion_state;
+    auto reversed() -> motion_profile; // TODO
+    auto start() const -> motion_state;
+    auto end() const -> motion_state;
     private:
     std::vector<motion_segment>& segments;
   };
