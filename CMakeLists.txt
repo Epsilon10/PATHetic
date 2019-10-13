@@ -11,6 +11,7 @@ project(pathetic)
 
 
 add_library(pathetic SHARED
+	src/control/pid_coeffecients.cc
 	src/control/pidf_controller.cc
 	src/kinematics/kinematics.cc
 	src/kinematics/tank_kinematics.cc
@@ -20,7 +21,10 @@ add_library(pathetic SHARED
 	src/path/parametric_curve.cc
 	src/path/quintic_polynomial.cc
 	src/profile/motion_state.cc
+	src/profile/motion_profile.cc
 	src/profile/motion_segment.cc
+	src/profile/profile_generator.cc
+	src/trajectory/constraints/drive_constraints.cc
 )
 
 target_include_directories(pathetic

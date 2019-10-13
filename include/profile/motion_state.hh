@@ -1,6 +1,9 @@
 #pragma once
 
 namespace pathetic::profile {
+  /**
+   * Kinematic state of a motion profile at a given time
+   */
   class motion_state {
     public:
     motion_state(double x, double v, double a, double j);

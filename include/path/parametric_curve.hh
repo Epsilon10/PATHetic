@@ -8,7 +8,7 @@ namespace pathetic::path {
     public:
     virtual auto length() const -> double = 0;
     virtual auto reparam(double s) const -> double = 0;
-    virtual auto reparam(std::vector<double> const& s) const -> void;
+    // virtual auto reparam(std::vector<double> const& s) const -> void;
 
     virtual auto pnml_get(double t) const -> math::vector2d = 0;
     virtual auto pnml_deriv(double t) const -> math::vector2d = 0;

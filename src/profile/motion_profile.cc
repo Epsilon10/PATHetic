@@ -19,8 +19,9 @@ namespace pathetic::profile {
   }
 
   auto motion_profile::duration() const -> double {
-    return std::accumulate(segments.begin(), segments.end(), 0.0,
-      [](auto const& a, auto const& b) { return a.dt + b.dt; });
+    auto sum = 0.0;
+    for (auto const& segment : segments) sum += segment.dt;
+    return sum;
   }
 
   auto motion_profile::start() const -> motion_state { return (*this)[0.0]; }

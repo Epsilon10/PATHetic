@@ -15,7 +15,6 @@ namespace pathetic::path {
   };
   class quintic_spline : public parametric_curve {
     public:
-    
     auto pos() const -> math::vector2d;
     auto deriv() const -> math::vector2d;
     auto second_deriv() const -> math::vector2d;
@@ -27,7 +26,7 @@ namespace pathetic::path {
       double max_delta_k = 0.01
     );
 
-    auto pnml_get(double t) const -> math::vector2d;
+    auto pnml_get(double t) const -> math::vector2d override;
     private:
     std::vector<double> s_samples;
     std::vector<double> t_samples;
@@ -44,10 +43,17 @@ namespace pathetic::path {
       math::vector2d const& v_hi
     ) -> void;
 
-    auto reparam(double s) const -> double;
+    auto reparam(double s) const -> double override;
 
     auto interp(double s, double s_lo, double s_hi, double t_lo, double t_hi) const -> double;
 
+    auto param_deriv(double t) const -> double override;
+    auto param_second_deriv(double t) const -> double override;
+
+    auto pnml_deriv(double t) const -> math::vector2d override;
+    auto pnml_second_deriv(double t) const -> math::vector2d override;
+
+    auto length() const -> double override;
     private:
     double max_segment_length, max_delta_k;
     double length = 0.0;

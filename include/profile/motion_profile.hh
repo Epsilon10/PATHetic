@@ -5,6 +5,9 @@
 #include "profile/motion_segment.hh"
 
 namespace pathetic::profile {
+  /**
+   * A collection of constant acceleraiton motion segments
+   */
   class motion_profile {
     public:
     motion_profile(std::vector<motion_segment>& segments);

@@ -1,6 +1,7 @@
 #include "path/quintic_spline.hh"
 #include <tuple>
 #include "math/general.hh"
+#include <cmath>
 
 namespace pathetic::path {
   waypoint::waypoint(
@@ -39,7 +40,7 @@ namespace pathetic::path {
     auto const a = k_1 - k_2 * b;
     auto const radius = std::sqrt((v1_x - a) * (v1_x - a) + (v1.y - b) * (v1.y - b));
 
-    auto const angle = 2 * std::asin((v1.dist_to(v3) / 2.0) / radius);
+    auto const angle = 2.0 * std::asin((v1.dist_to(v3) / 2.0) / radius);
     return angle * radius; 
   }
 
@@ -97,8 +98,31 @@ namespace pathetic::path {
     return interp(s, s_samples[lo], s_samples[hi], t_samples[lo], t_samples[hi]);
   }
 
+  
+  auto quintic_spline::pnml_deriv(double t) const -> math::vector2d {
+    return math::vector2d{x_pnml.deriv(t), y_pnml.deriv(t)};
+  }
+
+  auto quintic_spline::pnml_second_deriv(double t) const -> math::vector2d {
+    return math::vector2d{x_pnml.second_deriv(t), y_pnml.second_deriv(t)};
+  }
+
   auto quintic_spline::pnml_get(double t) const -> math::vector2d {
     return math::vector2d{x_pnml[t], y_pnml[t]};
+  }
+
+  auto quintic_spline::param_deriv(double t) const -> double {
+    auto const deriv = pnml_deriv(t);
+    return 1.0 / std::sqrt(deriv.x * deriv.x 
+      + deriv.y * deriv.y);  
+  }
+
+  auto quintic_spline::param_second_deriv(double t) const -> double {
+    auto const deriv = pnml_deriv(t);
+    auto const second_deriv = pnml_second_deriv(t);
+    auto const numerator = -1.0 * (deriv.x * second_deriv.x + deriv.y * second_deriv.x);
+    auto const denominator = deriv.x * deriv.x + deriv.y * deriv.y;
+    return numerator / (denominator * denominator);
   }
 
 }
