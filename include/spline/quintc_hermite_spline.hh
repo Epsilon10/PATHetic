@@ -5,6 +5,7 @@
 #include <Eigen/Core>
 
 #include "spline/spline.hh"
+#include "spline/spline_parametrizer.hh"
 
 namespace pathetic {
   class quintic_hermite_spline : spline<5> {

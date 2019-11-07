@@ -8,7 +8,8 @@
 
 namespace pathetic {
   struct waypoint {
-    waypoint(double x, double y, double dx, double dy, double d2x, double d2y);
+    waypoint(double x, double y, double dx, double dy, double d2x, double d2y)
+      : x(x), y(y), dx(dx), dy(dy), d2x(d2x), d2y(d2y) { }
 
     double x, y, dx, dy, d2x, d2y;
   };
